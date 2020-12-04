@@ -170,7 +170,16 @@ function moveStraight() {
 }
 
 function playAgain() {
+    porkDeath.play();
+    gameOverMusic.play();
     overlay.style.display = "block";
+}
+
+function startOver() {
+    gameOverMusic.pause();
+    overlay.style.display = "none";
+    gameIsOver = false;
+    startGame();
 }
 
 function gameOver() {
@@ -184,9 +193,11 @@ function gameOver() {
         grid.removeChild(grid.firstChild)
     }
     themeMusic.pause();
-    porkDeath.play();
-    gameOverMusic.play();
     playAgain();
+}
+
+function win() {
+    console.log('You Win');
 }
 
 function startGame() {
@@ -196,6 +207,7 @@ function startGame() {
     grid.style.display = 'block';
     begin();
     themeMusic.play();
+    themeMusic.loop = true;
 }
 
 function begin() {
