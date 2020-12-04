@@ -36,6 +36,8 @@ body {
     display: none;
 }
 
+
+/* Opening Screen */
 .scroll {
     background: url('img/scroll.png');
     height: 435px;
@@ -76,6 +78,51 @@ body {
     transform: translateY(-2px);
 }
 
+/* Game Over Screen */
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    background: rgba(0, 0, 0, .75);
+    display: none;
+}
+
+.playAgain {
+    background: url('img/scroll.png');
+    height: 435px;
+    width: 580px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    text-align: center;
+}
+
+.playAgainText p {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.playAgainDisplay {
+    display: block;
+}
+
+.playAgainText {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    position: absolute;
+    color: rgb(103, 48, 14);
+}
+
+.deadWaddles {
+    height: 100px;
+    margin-top: 75px;
+}
+
+
+/* Animation to make pig flip on jumps */
 .flip {
     animation: flipped .3s linear;
 }

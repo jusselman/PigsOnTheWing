@@ -2,7 +2,11 @@ const grid = document.querySelector('.grid');
 const jumper = document.createElement('div');
 const squeal = document.getElementById('squealing');
 const scroll = document.getElementById('scroll');
+const overlay = document.getElementById('overlay');
 const themeMusic = document.getElementById('themeMusic');
+const gameOverMusic = document.getElementById('gameOverMusic');
+const porkDeath = document.getElementById('porkDeath');
+let score = 0;
 let jumperLeft = 50;
 let startPoint = 150;
 let jumperBottom = startPoint;
@@ -17,11 +21,6 @@ let isJumping = false;
 let isLeft = false;
 let isRight = false;
 let displayOn = false;
-
-window.onload = function () {
-    themeMusic.loop = true;
-    themeMusic.play();
-}
 
 class Platform {
     constructor(newPlatBott) {
@@ -41,7 +40,6 @@ function makePlatform() {
     for (let i = 0; i < platCount; i++) {
         let platGap = 600 / platCount;
         let newPlatBott = 100 + i * platGap;
-        console.log(newPlatBott);
         let newPlat = new Platform(newPlatBott);
         platforms.push(newPlat);
     }
@@ -58,7 +56,10 @@ function movePlatform() {
                 let firstPlatform = platforms[0].visual;
                 firstPlatform.classList.remove('platform');
                 platforms.shift();
-                console.log(platforms);
+                score++;
+                if (score >= 50) {
+                    win();
+                }
                 let newPlatform = new Platform(700);
                 platforms.push(newPlatform);
             }
@@ -118,13 +119,6 @@ function fall() {
     }, 30)
 }
 
-function gameOver() {
-    console.log('game over');
-    gameIsOver = true;
-    clearInterval(upTimeId);
-    clearInterval(downTimeId);
-}
-
 function control(e) {
     jumper.style.bottom = jumperBottom + 'px'
     if (e.key === 'ArrowLeft') {
@@ -171,15 +165,37 @@ function moveRight() {
 function moveStraight() {
     isLeft = false;
     isRigtht = false;
+    clearInterval(upTimeId);
+    clearInterval(downTimeId);
+}
+
+function playAgain() {
+    overlay.style.display = "block";
+}
+
+function gameOver() {
+    console.log(score);
+    gameIsOver = true;
+    clearInterval(upTimeId);
+    clearInterval(downTimeId);
     clearInterval(rightTimeId);
     clearInterval(leftTimeId);
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild)
+    }
+    themeMusic.pause();
+    porkDeath.play();
+    gameOverMusic.play();
+    playAgain();
 }
 
 function startGame() {
     displayOn = true;
     scroll.style.display = 'none';
+    overlay.style.display = 'none';
     grid.style.display = 'block';
     begin();
+    themeMusic.play();
 }
 
 function begin() {

@@ -16,7 +16,7 @@
 
     <div class="scroll" id="scroll">
         <div class="scroll-text-ctn">
-            <h1>Pork Warrior</h1>
+            <h1>Pork Hoppin'</h1>
             <p>A dark scourge has overtaken the land of Sus Scrofia and only
                 one pig has the courage to step up. Help Prince
                 Swineheart take back control of the Burger Kinddom
@@ -27,14 +27,35 @@
     </div>
 
     <div class="grid"></div>
+
+    <div class="overlay" id="overlay">
+        <div class="playAgain">
+            <img src="img/deadWaddles.png" class="deadWaddles" />
+            <div class="playAgainTxt">
+                <h1>Lord Swineheart Has Fallen</h1>
+                <p>Don't dispair, Lord Swineheart will rise again,<br>
+                    he is the only pig capable of bringing home the
+                    bacon<br> and restoring order to the kingdom...
+                </p>
+                <button onclick="startGame()" class="scroll-btn">Pork Again</button>
+            </div>
+        </div>
+    </div>
+
     <img class="burger1" src="img/burgerBouncing.gif"></div>
     <img class="burger2" src="img/burgerBouncing.gif"></div>
 
     <audio id="squealing">
         <source src="audio/squeal.wav" type="audio/wav">
     </audio>
+    <audio id="porkDeath">
+        <source src="audio/porkDeath.wav" type="audio/wav">
+    </audio>
     <audio id="themeMusic">
         <source src="audio/themeMusic.ogg" type="audio/ogg">
+    </audio>
+    <audio id="gameOverMusic">
+        <source src="audio/gameOver.ogg" type="audio/ogg">
     </audio>
     <!-- <audio id="playingMusic">
         <source src="audio/playingMusic.mp3" type="audio/mp3">
