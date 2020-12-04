@@ -5,13 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" href="#">
-    <title>Jumper</title>
+    <link rel="shortcut icon" href="img/waddlesIco.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+    <title>Pork Hoppin'</title>
 </head>
 
 <body>
-    <div class="grid"></div>
 
+
+    <div class="scroll" id="scroll">
+        <div class="scroll-text-ctn">
+            <h1>Pork Warrior</h1>
+            <p>A dark scourge has overtaken the land of Sus Scrofia and only
+                one pig has the courage to step up. Help Prince
+                Swineheart take back control of the Burger Kinddom
+                from the evil forces and restore peace...
+            </p>
+            <button onclick="startGame()" class="scroll-btn">Start Porkin'</button>
+        </div>
+    </div>
+
+    <div class="grid"></div>
+    <img class="burger1" src="img/burgerBouncing.gif"></div>
+    <img class="burger2" src="img/burgerBouncing.gif"></div>
+
+    <audio id="squealing">
+        <source src="audio/squeal.wav" type="audio/wav">
+    </audio>
+    <audio id="themeMusic">
+        <source src="audio/themeMusic.ogg" type="audio/ogg">
+    </audio>
+    <!-- <audio id="playingMusic">
+        <source src="audio/playingMusic.mp3" type="audio/mp3">
+    </audio> -->
     <script src="script.js"></script>
 </body>
 

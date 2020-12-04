@@ -1,10 +1,13 @@
 const grid = document.querySelector('.grid');
 const jumper = document.createElement('div');
+const squeal = document.getElementById('squealing');
+const scroll = document.getElementById('scroll');
+const themeMusic = document.getElementById('themeMusic');
 let jumperLeft = 50;
 let startPoint = 150;
 let jumperBottom = startPoint;
 let gameIsOver = false;
-let platCount = 100;
+let platCount = 10;
 let platforms = [];
 let upTimeId;
 let downTimeId;
@@ -13,7 +16,12 @@ let rightTimeId;
 let isJumping = false;
 let isLeft = false;
 let isRight = false;
+let displayOn = false;
 
+window.onload = function () {
+    themeMusic.loop = true;
+    themeMusic.play();
+}
 
 class Platform {
     constructor(newPlatBott) {
@@ -31,11 +39,11 @@ class Platform {
 
 function makePlatform() {
     for (let i = 0; i < platCount; i++) {
-        let platGap = 6000 / platCount;
+        let platGap = 600 / platCount;
         let newPlatBott = 100 + i * platGap;
+        console.log(newPlatBott);
         let newPlat = new Platform(newPlatBott);
         platforms.push(newPlat);
-        console.log(platforms);
     }
 }
 
@@ -45,6 +53,15 @@ function movePlatform() {
             plat.bottom -= 4;
             let visual = plat.visual;
             visual.style.bottom = plat.bottom + 'px';
+
+            if (plat.bottom < 10) {
+                let firstPlatform = platforms[0].visual;
+                firstPlatform.classList.remove('platform');
+                platforms.shift();
+                console.log(platforms);
+                let newPlatform = new Platform(700);
+                platforms.push(newPlatform);
+            }
         })
     }
 }
@@ -63,8 +80,13 @@ function jump() {
     clearInterval(downTimeId);
     isJumping = true;
     upTimeId = setInterval(function () {
-        jumperBottom += 20;
+        jumperBottom += 50;
         jumper.style.bottom = jumperBottom + 'px';
+        jumper.classList.add('flip');
+        squeal.play();
+        setTimeout(() => {
+            jumper.classList.remove('flip')
+        }, 300)
         if (jumperBottom > startPoint + 200) {
             fall();
         }
@@ -92,8 +114,7 @@ function fall() {
                 startPoint = jumperBottom;
                 jump();
             }
-        })
-
+        });
     }, 30)
 }
 
@@ -107,17 +128,15 @@ function gameOver() {
 function control(e) {
     jumper.style.bottom = jumperBottom + 'px'
     if (e.key === 'ArrowLeft') {
-        console.log('from control function')
         moveLeft();
     } else if (e.key === 'ArrowRight') {
         moveRight();
         console.log('moveRight');
     }
-    else if (e.key === 'ArrowUp') {
-        console.log('moveStraight');
+    else if (e.key === 'ArrowDown') {
+        moveStraight();
     }
 }
-
 
 function moveLeft() {
     if (isRight) {
@@ -127,8 +146,9 @@ function moveLeft() {
     isLeft = true
     leftTimeId = setInterval(() => {
         if (jumperLeft >= 0) {
-            jumperLeft -= 5
-            jumper.style.left = jumperLeft + 'px'
+            jumperLeft -= 5;
+            jumper.style.left = jumperLeft + 'px';
+            jumper.classList.remove('right');
         } else moveRight()
     }, 20)
 }
@@ -141,10 +161,25 @@ function moveRight() {
     isRight = true
     rightTimeId = setInterval(() => {
         if (jumperLeft <= 940) {
-            jumperLeft += 5
-            jumper.style.left = jumperLeft + 'px'
+            jumperLeft += 5;
+            jumper.style.left = jumperLeft + 'px';
+            jumper.classList.add('right');
         } else moveLeft()
     }, 20)
+}
+
+function moveStraight() {
+    isLeft = false;
+    isRigtht = false;
+    clearInterval(rightTimeId);
+    clearInterval(leftTimeId);
+}
+
+function startGame() {
+    displayOn = true;
+    scroll.style.display = 'none';
+    grid.style.display = 'block';
+    begin();
 }
 
 function begin() {
@@ -157,4 +192,3 @@ function begin() {
     }
 }
 
-begin();
