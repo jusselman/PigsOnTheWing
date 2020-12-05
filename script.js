@@ -11,7 +11,7 @@ let jumperLeft = 50;
 let startPoint = 150;
 let jumperBottom = startPoint;
 let gameIsOver = false;
-let platCount = 10;
+let platCount = 7;
 let platforms = [];
 let upTimeId;
 let downTimeId;
@@ -42,13 +42,14 @@ function makePlatform() {
         let newPlatBott = 100 + i * platGap;
         let newPlat = new Platform(newPlatBott);
         platforms.push(newPlat);
+        console.log('The platCount is ' + platCount);
     }
 }
 
 function movePlatform() {
-    if (jumperBottom > 200) {
+    if (jumperBottom > 10) {
         platforms.forEach(plat => {
-            plat.bottom -= 4;
+            plat.bottom -= 2;
             let visual = plat.visual;
             visual.style.bottom = plat.bottom + 'px';
 
@@ -80,7 +81,7 @@ function makeJumper() {
 function jump() {
     clearInterval(downTimeId);
     isJumping = true;
-    upTimeId = setInterval(function () {
+    upTimeId = setInterval(() => {
         jumperBottom += 50;
         jumper.style.bottom = jumperBottom + 'px';
         jumper.classList.add('flip');
@@ -97,7 +98,7 @@ function jump() {
 function fall() {
     clearInterval(upTimeId);
     isJumping = false;
-    downTimeId = setInterval(function () {
+    downTimeId = setInterval(() => {
         jumperBottom -= 5;
         jumper.style.bottom = jumperBottom + 'px';
         if (jumperBottom <= 0) {
@@ -119,30 +120,27 @@ function fall() {
     }, 30)
 }
 
+// Controller Functionality //
 function control(e) {
     jumper.style.bottom = jumperBottom + 'px'
     if (e.key === 'ArrowLeft') {
         moveLeft();
     } else if (e.key === 'ArrowRight') {
         moveRight();
-        console.log('moveRight');
-    }
-    else if (e.key === 'ArrowDown') {
-        moveStraight();
     }
 }
 
 function moveLeft() {
     if (isRight) {
         clearInterval(rightTimeId)
-        isRight = false
+        isRight = false;
+        jumper.classList.remove('right');
     }
     isLeft = true
     leftTimeId = setInterval(() => {
         if (jumperLeft >= 0) {
             jumperLeft -= 5;
             jumper.style.left = jumperLeft + 'px';
-            jumper.classList.remove('right');
         } else moveRight()
     }, 20)
 }
@@ -150,36 +148,47 @@ function moveLeft() {
 function moveRight() {
     if (isLeft) {
         clearInterval(leftTimeId)
-        isGoingLeft = false
+        isGoingLeft = false;
+        jumper.classList.add('right');
     }
     isRight = true
     rightTimeId = setInterval(() => {
         if (jumperLeft <= 940) {
             jumperLeft += 5;
             jumper.style.left = jumperLeft + 'px';
-            jumper.classList.add('right');
         } else moveLeft()
     }, 20)
 }
 
-function moveStraight() {
-    isLeft = false;
-    isRigtht = false;
+// Reseting Game Play //
+function resetStats() {
     clearInterval(upTimeId);
     clearInterval(downTimeId);
+    clearInterval(rightTimeId);
+    clearInterval(leftTimeId);
 }
 
 function playAgain() {
     porkDeath.play();
     gameOverMusic.play();
     overlay.style.display = "block";
+    resetStats();
 }
 
 function startOver() {
     gameOverMusic.pause();
     overlay.style.display = "none";
     gameIsOver = false;
+    platforms = [];
+    // clearInterval(upTimeId);
+    // clearInterval(downTimeId);
+    // clearInterval(rightTimeId);
+    // clearInterval(leftTimeId);
+    // newPlatBott = 0;
+    // let newPlatform = new Platform(700);
+    // platforms.push(newPlatform);
     startGame();
+    resetStats
 }
 
 function gameOver() {
@@ -189,6 +198,8 @@ function gameOver() {
     clearInterval(downTimeId);
     clearInterval(rightTimeId);
     clearInterval(leftTimeId);
+    score = 0;
+    console.log(score);
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild)
     }
@@ -205,13 +216,20 @@ function startGame() {
     scroll.style.display = 'none';
     overlay.style.display = 'none';
     grid.style.display = 'block';
+    clearInterval(upTimeId);
+    clearInterval(downTimeId);
+    clearInterval(rightTimeId);
+    clearInterval(leftTimeId);
     begin();
+
+    console.log(upTimeId, downTimeId, rightTimeId, leftTimeId);
     themeMusic.play();
     themeMusic.loop = true;
 }
 
 function begin() {
     if (!gameIsOver) {
+
         makePlatform();
         makeJumper();
         setInterval(movePlatform, 30);

@@ -17,6 +17,10 @@ body {
     transform: rotateY(180deg);
 }
 
+/* .left {
+    transform: rotateY(-180deg);
+} */
+
 .platform {
     position: absolute;
     width: 100px;
