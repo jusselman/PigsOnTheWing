@@ -1,3 +1,4 @@
+// Constants snacked from the html //
 const grid = document.querySelector('.grid');
 const jumper = document.createElement('div');
 const squeal = document.getElementById('squealing');
@@ -6,6 +7,8 @@ const overlay = document.getElementById('overlay');
 const themeMusic = document.getElementById('themeMusic');
 const gameOverMusic = document.getElementById('gameOverMusic');
 const porkDeath = document.getElementById('porkDeath');
+
+// The other variables //
 let score = 0;
 let jumperLeft = 50;
 let startPoint = 150;
@@ -22,12 +25,13 @@ let isLeft = false;
 let isRight = false;
 let displayOn = false;
 
+
+// Constructor that builds platforms //
 class Platform {
     constructor(newPlatBott) {
         this.bottom = newPlatBott;
-        this.left = Math.random() * 1000;
+        this.left = Math.random() * 900;
         this.visual = document.createElement('div');
-
         const visual = this.visual;
         visual.classList.add('platform');
         visual.style.left = this.left + 'px';
@@ -36,17 +40,19 @@ class Platform {
     }
 }
 
+// You'll never guess what this one does //
 function makePlatform() {
     for (let i = 0; i < platCount; i++) {
-        let platGap = 600 / platCount;
+        let platGap = 700 / platCount;
         let newPlatBott = 100 + i * platGap;
         let newPlat = new Platform(newPlatBott);
         platforms.push(newPlat);
-        console.log('The platCount is ' + platCount);
     }
 }
 
+// This one either //
 function movePlatform() {
+    console.log('inside movePlatform()');
     if (jumperBottom > 10) {
         platforms.forEach(plat => {
             plat.bottom -= 2;
@@ -64,20 +70,21 @@ function movePlatform() {
                 let newPlatform = new Platform(700);
                 platforms.push(newPlatform);
             }
-        })
+            return;
+        });
     }
 }
 
+// this appends the pig to the grid //
 function makeJumper() {
     grid.appendChild(jumper);
     jumper.classList.add('jumper');
-    console.log(jumperLeft);
     jumperLeft = platforms[0].left;
     jumper.style.left = jumperLeft + 'px';
     jumper.style.bottom = jumperBottom + 'px';
 }
 
-
+// jumps //
 function jump() {
     clearInterval(downTimeId);
     isJumping = true;
@@ -89,11 +96,12 @@ function jump() {
         setTimeout(() => {
             jumper.classList.remove('flip')
         }, 300)
-        if (jumperBottom > startPoint + 200) {
+        if (jumperBottom > startPoint + 300) {
             fall();
         }
-    }, 30)
+    }, 40);
 }
+
 
 function fall() {
     clearInterval(upTimeId);
@@ -104,15 +112,16 @@ function fall() {
         if (jumperBottom <= 0) {
             gameOver();
         }
+
+        // Check if space is not a platform, if is then jump() //
         platforms.forEach(platform => {
             if (
                 (jumperBottom >= platform.bottom) &&
-                (jumperBottom <= platform.bottom + 15) &&
-                ((jumperLeft + 60) >= platform.left) &&
+                (jumperBottom <= platform.bottom + 10) &&
+                ((jumperLeft + 78) >= platform.left) &&
                 (jumperLeft <= (platform.left + 85)) &&
                 !isJumping
             ) {
-                console.log('landed');
                 startPoint = jumperBottom;
                 jump();
             }
@@ -120,7 +129,7 @@ function fall() {
     }, 30)
 }
 
-// Controller Functionality //
+// Keyboard Controller Functionality //
 function control(e) {
     jumper.style.bottom = jumperBottom + 'px'
     if (e.key === 'ArrowLeft') {
@@ -141,8 +150,8 @@ function moveLeft() {
         if (jumperLeft >= 0) {
             jumperLeft -= 5;
             jumper.style.left = jumperLeft + 'px';
-        } else moveRight()
-    }, 20)
+        } else moveRight();
+    }, 20);
 }
 
 function moveRight() {
@@ -156,11 +165,12 @@ function moveRight() {
         if (jumperLeft <= 940) {
             jumperLeft += 5;
             jumper.style.left = jumperLeft + 'px';
-        } else moveLeft()
-    }, 20)
+        } else moveLeft();
+    }, 20);
 }
 
 // Reseting Game Play //
+
 function resetStats() {
     clearInterval(upTimeId);
     clearInterval(downTimeId);
@@ -168,38 +178,11 @@ function resetStats() {
     clearInterval(leftTimeId);
 }
 
-function playAgain() {
-    porkDeath.play();
-    gameOverMusic.play();
-    overlay.style.display = "block";
-    resetStats();
-}
-
-function startOver() {
-    gameOverMusic.pause();
-    overlay.style.display = "none";
-    gameIsOver = false;
-    platforms = [];
-    // clearInterval(upTimeId);
-    // clearInterval(downTimeId);
-    // clearInterval(rightTimeId);
-    // clearInterval(leftTimeId);
-    // newPlatBott = 0;
-    // let newPlatform = new Platform(700);
-    // platforms.push(newPlatform);
-    startGame();
-    resetStats
-}
-
 function gameOver() {
-    console.log(score);
     gameIsOver = true;
     clearInterval(upTimeId);
     clearInterval(downTimeId);
-    clearInterval(rightTimeId);
-    clearInterval(leftTimeId);
-    score = 0;
-    console.log(score);
+    platformInterval(movePlatform, 3000);
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild)
     }
@@ -207,34 +190,51 @@ function gameOver() {
     playAgain();
 }
 
+// Brings up play again screen, changes music to gameover music //
+function playAgain() {
+    porkDeath.play();
+    gameOverMusic.play();
+    overlay.style.display = "block";
+    clearInterval(upTimeId);
+    clearInterval(downTimeId);
+    clearInterval(rightTimeId);
+    clearInterval(leftTimeId);
+    console.log('end of playAgain()', upTimeId, downTimeId, rightTimeId, leftTimeId);
+}
+
+function startOver() {
+    gameOverMusic.pause();
+    overlay.style.display = "none";
+    gameIsOver = false;
+    platforms = [];
+    startGame();
+}
+
 function win() {
     console.log('You Win');
 }
 
+// Start button triggers this on landing page, basically clears elements from home screen and starts gameplay//
 function startGame() {
     displayOn = true;
     scroll.style.display = 'none';
     overlay.style.display = 'none';
     grid.style.display = 'block';
-    clearInterval(upTimeId);
-    clearInterval(downTimeId);
-    clearInterval(rightTimeId);
-    clearInterval(leftTimeId);
     begin();
-
-    console.log(upTimeId, downTimeId, rightTimeId, leftTimeId);
     themeMusic.play();
     themeMusic.loop = true;
 }
 
+// Initiates gameplay //
 function begin() {
     if (!gameIsOver) {
-
+        console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
         makePlatform();
         makeJumper();
         setInterval(movePlatform, 30);
         jump();
         document.addEventListener('keyup', control);
     }
+    return;
 }
 

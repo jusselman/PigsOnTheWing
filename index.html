@@ -12,8 +12,7 @@
 </head>
 
 <body>
-
-
+    <!-- Opening screen with description and start button -->
     <div class="scroll" id="scroll">
         <div class="scroll-text-ctn">
             <h1>Pork Hoppin'</h1>
@@ -26,8 +25,10 @@
         </div>
     </div>
 
+    <!-- Grid where gameplay takes place -->
     <div class="grid"></div>
 
+    <!-- Screen that pops up on gameover with option to play again -->
     <div class="overlay" id="overlay">
         <div class="playAgain">
             <img src="img/deadWaddles.png" class="deadWaddles" />
@@ -42,9 +43,11 @@
         </div>
     </div>
 
+    <!-- Bouncing burgers -->
     <img class="burger1" src="img/burgerBouncing.gif"></div>
     <img class="burger2" src="img/burgerBouncing.gif"></div>
 
+    <!-- Audio -->
     <audio id="squealing">
         <source src="audio/squeal.wav" type="audio/wav">
     </audio>
@@ -57,9 +60,7 @@
     <audio id="gameOverMusic">
         <source src="audio/gameOver.ogg" type="audio/ogg">
     </audio>
-    <!-- <audio id="playingMusic">
-        <source src="audio/playingMusic.mp3" type="audio/mp3">
-    </audio> -->
+
     <script src="script.js"></script>
 </body>
 
