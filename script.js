@@ -18,8 +18,8 @@ let platCount = 7;
 let platforms = [];
 let upTimeId;
 let downTimeId;
-let leftTimeId;
-let rightTimeId;
+var leftTimeId;
+var rightTimeId;
 let isJumping = false;
 let isLeft = false;
 let isRight = false;
@@ -140,11 +140,14 @@ function control(e) {
 
 function moveLeft() {
     if (isRight) {
-        clearInterval(rightTimeId)
+        clearInterval(rightTimeId);
         isRight = false;
         jumper.classList.remove('right');
     }
-    isLeft = true
+
+
+    isLeft = true;
+    clearInterval(leftTimeId);
     leftTimeId = setInterval(() => {
         if (jumperLeft >= 0) {
             jumperLeft -= 5;
@@ -155,11 +158,14 @@ function moveLeft() {
 
 function moveRight() {
     if (isLeft) {
-        clearInterval(leftTimeId)
+        clearInterval(leftTimeId);
         isGoingLeft = false;
         jumper.classList.add('right');
     }
-    isRight = true
+
+
+    isRight = true;
+    clearInterval(rightTimeId);
     rightTimeId = setInterval(() => {
         if (jumperLeft <= 940) {
             jumperLeft += 5;
@@ -197,14 +203,11 @@ function startOver() {
 
 function gameOver() {
     gameIsOver = true;
-
-
+    clearInterval(upTimeId);
+    clearInterval(platformTimeId);
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild)
-        clearInterval(upTimeId);
-        clearInterval(downTimeId);
-        clearInterval(rightTimeId);
-        clearInterval(leftTimeId);
+
     }
     themeMusic.pause();
     playAgain();
@@ -224,17 +227,19 @@ function startGame() {
     themeMusic.loop = true;
 }
 
-function platformInterval(func, int) {
-    setInterval(func, int);
-    return;
-}
+// function platformInterval(func, int) {
+//     setInterval(func, int);
+//     return;
+// }
+
+platformTimeId = setInterval(movePlatform, 30);
 
 function begin() {
     if (!gameIsOver) {
         console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
         makePlatform();
         makeJumper();
-        platformInterval(movePlatform, 30);
+        platformTimeId;
         jump();
         document.addEventListener('keyup', control);
     }
