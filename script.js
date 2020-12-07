@@ -203,11 +203,9 @@ function startOver() {
 
 function gameOver() {
     gameIsOver = true;
-    clearInterval(upTimeId);
     clearInterval(platformTimeId);
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild)
-
     }
     themeMusic.pause();
     playAgain();
