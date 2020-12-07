@@ -25,7 +25,6 @@ let isLeft = false;
 let isRight = false;
 let displayOn = false;
 
-
 // Constructor that builds platforms //
 class Platform {
     constructor(newPlatBott) {
@@ -50,8 +49,7 @@ function makePlatform() {
     }
 }
 
-// This one either //
-function movePlatform() {
+function movePlatform(int) {
     console.log('inside movePlatform()');
     if (jumperBottom > 10) {
         platforms.forEach(plat => {
@@ -96,12 +94,11 @@ function jump() {
         setTimeout(() => {
             jumper.classList.remove('flip')
         }, 300)
-        if (jumperBottom > startPoint + 300) {
+        if (jumperBottom > startPoint + 200) {
             fall();
         }
     }, 40);
 }
-
 
 function fall() {
     clearInterval(upTimeId);
@@ -123,6 +120,8 @@ function fall() {
                 !isJumping
             ) {
                 startPoint = jumperBottom;
+                console.log('End of fall()', upTimeId, downTimeId, rightTimeId, leftTimeId);
+
                 jump();
             }
         });
@@ -170,7 +169,6 @@ function moveRight() {
 }
 
 // Reseting Game Play //
-
 function resetStats() {
     clearInterval(upTimeId);
     clearInterval(downTimeId);
@@ -178,19 +176,6 @@ function resetStats() {
     clearInterval(leftTimeId);
 }
 
-function gameOver() {
-    gameIsOver = true;
-    clearInterval(upTimeId);
-    clearInterval(downTimeId);
-    platformInterval(movePlatform, 3000);
-    while (grid.firstChild) {
-        grid.removeChild(grid.firstChild)
-    }
-    themeMusic.pause();
-    playAgain();
-}
-
-// Brings up play again screen, changes music to gameover music //
 function playAgain() {
     porkDeath.play();
     gameOverMusic.play();
@@ -210,11 +195,25 @@ function startOver() {
     startGame();
 }
 
+function gameOver() {
+    gameIsOver = true;
+
+
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild)
+        clearInterval(upTimeId);
+        clearInterval(downTimeId);
+        clearInterval(rightTimeId);
+        clearInterval(leftTimeId);
+    }
+    themeMusic.pause();
+    playAgain();
+}
+
 function win() {
     console.log('You Win');
 }
 
-// Start button triggers this on landing page, basically clears elements from home screen and starts gameplay//
 function startGame() {
     displayOn = true;
     scroll.style.display = 'none';
@@ -225,13 +224,17 @@ function startGame() {
     themeMusic.loop = true;
 }
 
-// Initiates gameplay //
+function platformInterval(func, int) {
+    setInterval(func, int);
+    return;
+}
+
 function begin() {
     if (!gameIsOver) {
         console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
         makePlatform();
         makeJumper();
-        setInterval(movePlatform, 30);
+        platformInterval(movePlatform, 30);
         jump();
         document.addEventListener('keyup', control);
     }
