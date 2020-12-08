@@ -34,6 +34,15 @@ body {
     display: none;
 }
 
+.scoreKeeper {
+    height: 50px;
+    width: 50px;
+    background: beige;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* Opening Screen */
 .scroll {
     background: url('img/scroll.png');
@@ -96,8 +105,6 @@ body {
     color: rgb(103, 48, 14);
 }
 
-
-
 .playAgainDisplay {
     display: block;
 }
@@ -113,6 +120,40 @@ body {
 .deadWaddles {
     height: 100px;
     margin-top: 75px;
+}
+
+/* Win Screen */
+.win-screen {
+    height: 100vh;
+    width: 100vw;
+    background: url('img/stars.gif');
+    background-size: contain;
+    display: none;
+}
+
+.win-screen-display {
+    display: block
+}
+
+.win-screen-ctn {
+    background: url('img/scroll.png');
+    height: 435px;
+    width: 580px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    flex-direction: column;
+    text-align: center;
+    color: rgb(103, 48, 14);
+}
+
+.winScreenTxt {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    position: absolute;
 }
 
 

@@ -26,7 +26,9 @@
     </div>
 
     <!-- Grid where gameplay takes place -->
-    <div class="grid"></div>
+    <div class="grid">
+
+    </div>
 
     <!-- Screen that pops up on gameover with option to play again -->
     <div class="overlay" id="overlay">
@@ -42,6 +44,21 @@
             </div>
         </div>
     </div>
+
+    <!-- Winning Screen that appears on win -->
+    <div class="win-screen" id="winScreen">
+        <div class="win-screen-ctn">
+            <div class="winScreenTxt">
+                <h1>Lord Swineheart Has Prevailed!!!</h1>
+                <p>Our portly prince has done it again<br>
+                    Finally the piglets of Sus Scrofia can rest easy,<br>
+                    but for how long...
+                </p>
+                <button class="scroll-btn" id="reload">Pork Again</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Bouncing burgers -->
     <img class="burger1" src="img/burgerBouncing.gif"></div>
@@ -59,6 +76,9 @@
     </audio>
     <audio id="gameOverMusic">
         <source src="audio/gameOver.ogg" type="audio/ogg">
+    </audio>
+    <audio id="winMusic">
+        <source src="audio/win.ogg" type="audio/ogg">
     </audio>
 
     <script src="script.js"></script>

@@ -1,20 +1,30 @@
-// Constants snacked from the html //
+// Grid and elements for gameplay //
 const grid = document.querySelector('.grid');
 const jumper = document.createElement('div');
-const squeal = document.getElementById('squealing');
+const scoreKeeper = document.createElement('div');
+const scoreCard = document.createElement('h1');
+const platformClass = document.querySelector('.platform');
+const burger1 = document.querySelector('.burger1');
+const burger2 = document.querySelector('.burger2');
+const reloadButton = document.getElementById("reload");
+
 const scroll = document.getElementById('scroll');
 const overlay = document.getElementById('overlay');
+const winScreen = document.getElementById('winScreen');
+
+// Music and Audio
 const themeMusic = document.getElementById('themeMusic');
 const gameOverMusic = document.getElementById('gameOverMusic');
+const winMusic = document.getElementById('winMusic');
 const porkDeath = document.getElementById('porkDeath');
+const squeal = document.getElementById('squealing');
 
-// The other variables //
 let score = 0;
 let jumperLeft = 50;
 let startPoint = 150;
 let jumperBottom = startPoint;
 let gameIsOver = false;
-let platCount = 7;
+let platCount = 10;
 let platforms = [];
 let upTimeId;
 let downTimeId;
@@ -24,6 +34,7 @@ let isJumping = false;
 let isLeft = false;
 let isRight = false;
 let displayOn = false;
+let platformTimeId;
 
 // Constructor that builds platforms //
 class Platform {
@@ -39,7 +50,7 @@ class Platform {
     }
 }
 
-// You'll never guess what this one does //
+// Creat new platforms and push them to platforms array //
 function makePlatform() {
     for (let i = 0; i < platCount; i++) {
         let platGap = 700 / platCount;
@@ -49,6 +60,8 @@ function makePlatform() {
     }
 }
 
+// Push platforms to the bottom of the screen and make new ones coming// 
+// From the top //
 function movePlatform(int) {
     console.log('inside movePlatform()');
     if (jumperBottom > 10) {
@@ -62,9 +75,7 @@ function movePlatform(int) {
                 firstPlatform.classList.remove('platform');
                 platforms.shift();
                 score++;
-                if (score >= 50) {
-                    win();
-                }
+                keepScore()
                 let newPlatform = new Platform(700);
                 platforms.push(newPlatform);
             }
@@ -72,6 +83,42 @@ function movePlatform(int) {
         });
     }
 }
+
+// Increment ScoreBoard //
+function keepScore() {
+    grid.appendChild(scoreKeeper);
+    scoreKeeper.classList.add('scoreKeeper');
+    scoreKeeper.appendChild(scoreCard);
+    scoreCard.innerHTML = score;
+    if (score >= 50) {
+        win();
+    }
+}
+
+// WINNER!!! //
+function win() {
+    burger1.style.display = 'none';
+    burger2.style.display = 'none';
+    clearInterval(platformTimeId);
+    clearInterval(upTimeId);
+    clearInterval(downTimeId);
+    clearInterval(rightTimeId);
+    clearInterval(leftTimeId);
+    while (grid.firstChild) {
+        grid.removeChild(grid.firstChild);
+    }
+    console.log('after the while (grid.firstChild)')
+    winScreen.style.display = 'block';
+    themeMusic.pause();
+    winMusic.loop = true;
+    winMusic.play();
+}
+
+// reload page on win page //
+function reload() {
+    reload = location.reload();
+}
+reloadButton.addEventListener("click", reload, false);
 
 // this appends the pig to the grid //
 function makeJumper() {
@@ -85,6 +132,7 @@ function makeJumper() {
 // jumps //
 function jump() {
     clearInterval(downTimeId);
+
     isJumping = true;
     upTimeId = setInterval(() => {
         jumperBottom += 50;
@@ -94,7 +142,7 @@ function jump() {
         setTimeout(() => {
             jumper.classList.remove('flip')
         }, 300)
-        if (jumperBottom > startPoint + 200) {
+        if (jumperBottom > startPoint + 250) {
             fall();
         }
     }, 40);
@@ -109,7 +157,6 @@ function fall() {
         if (jumperBottom <= 0) {
             gameOver();
         }
-
         // Check if space is not a platform, if is then jump() //
         platforms.forEach(platform => {
             if (
@@ -121,7 +168,6 @@ function fall() {
             ) {
                 startPoint = jumperBottom;
                 console.log('End of fall()', upTimeId, downTimeId, rightTimeId, leftTimeId);
-
                 jump();
             }
         });
@@ -144,7 +190,6 @@ function moveLeft() {
         isRight = false;
         jumper.classList.remove('right');
     }
-
 
     isLeft = true;
     clearInterval(leftTimeId);
@@ -193,6 +238,17 @@ function playAgain() {
     console.log('end of playAgain()', upTimeId, downTimeId, rightTimeId, leftTimeId);
 }
 
+function startGame() {
+    displayOn = true;
+    scroll.style.display = 'none';
+    overlay.style.display = 'none';
+    grid.style.display = 'block';
+    platformTimeId = setInterval(movePlatform, 30);
+    begin();
+    themeMusic.play();
+    themeMusic.loop = true;
+}
+
 function startOver() {
     gameOverMusic.pause();
     overlay.style.display = "none";
@@ -203,42 +259,28 @@ function startOver() {
 
 function gameOver() {
     gameIsOver = true;
+    score = 0;
     clearInterval(platformTimeId);
     while (grid.firstChild) {
         grid.removeChild(grid.firstChild)
     }
     themeMusic.pause();
     playAgain();
+    console.log('gameover');
 }
-
-function win() {
-    console.log('You Win');
-}
-
-function startGame() {
-    displayOn = true;
-    scroll.style.display = 'none';
-    overlay.style.display = 'none';
-    grid.style.display = 'block';
-    begin();
-    themeMusic.play();
-    themeMusic.loop = true;
-}
-
-// function platformInterval(func, int) {
-//     setInterval(func, int);
-//     return;
-// }
-
-platformTimeId = setInterval(movePlatform, 30);
 
 function begin() {
     if (!gameIsOver) {
-        console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
+        // console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
+        console.log('In begin()', platformTimeId);
+        // scoreKeeping();
         makePlatform();
         makeJumper();
         platformTimeId;
         jump();
+        console.log('this is the platformClass ' + platformClass);
+
+
         document.addEventListener('keyup', control);
     }
     return;
