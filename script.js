@@ -35,12 +35,13 @@ let isLeft = false;
 let isRight = false;
 let displayOn = false;
 let platformTimeId;
+let gridWidth = 0; // Dynamic grid width
 
 // Constructor that builds platforms //
 class Platform {
     constructor(newPlatBott) {
         this.bottom = newPlatBott;
-        this.left = Math.random() * 900;
+        this.left = Math.random() * (gridWidth - 100); // Dynamic based on grid width
         this.visual = document.createElement('div');
         const visual = this.visual;
         visual.classList.add('platform');
@@ -50,7 +51,7 @@ class Platform {
     }
 }
 
-// Creat new platforms and push them to platforms array //
+// Create new platforms and push them to platforms array //
 function makePlatform() {
     for (let i = 0; i < platCount; i++) {
         let platGap = 700 / platCount;
@@ -208,11 +209,10 @@ function moveRight() {
         jumper.classList.add('right');
     }
 
-
     isRight = true;
     clearInterval(rightTimeId);
     rightTimeId = setInterval(() => {
-        if (jumperLeft <= 940) {
+        if (jumperLeft <= gridWidth - 60) { // Dynamic right boundary
             jumperLeft += 5;
             jumper.style.left = jumperLeft + 'px';
         } else moveLeft();
@@ -243,6 +243,7 @@ function startGame() {
     scroll.style.display = 'none';
     overlay.style.display = 'none';
     grid.style.display = 'block';
+    gridWidth = grid.offsetWidth; // Set dynamic grid width
     platformTimeId = setInterval(movePlatform, 30);
     begin();
     themeMusic.play();
@@ -271,18 +272,13 @@ function gameOver() {
 
 function begin() {
     if (!gameIsOver) {
-        // console.log("In begin()", upTimeId, downTimeId, rightTimeId, leftTimeId);
         console.log('In begin()', platformTimeId);
-        // scoreKeeping();
         makePlatform();
         makeJumper();
         platformTimeId;
         jump();
         console.log('this is the platformClass ' + platformClass);
-
-
         document.addEventListener('keyup', control);
     }
     return;
 }
-
